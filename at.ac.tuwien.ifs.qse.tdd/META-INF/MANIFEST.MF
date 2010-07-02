@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tdd
+Bundle-SymbolicName: at.ac.tuwien.ifs.qse.tdd;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: at.ac.tuwien.ifs.qse.tdd.Activator
+Bundle-Vendor: Quality Software Engineering - qse.ifs.tuwien.ac.at
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core;bundle-version="3.5.2",
+ com.mountainminds.eclemma.ui;bundle-version="1.4.3",
+ org.eclipse.jdt.ui;bundle-version="3.5.2",
+ org.eclipse.ui.ide;bundle-version="3.5.2",
+ org.eclipse.jdt.junit;bundle-version="3.5.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy

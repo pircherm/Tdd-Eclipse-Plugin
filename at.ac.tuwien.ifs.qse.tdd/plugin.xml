@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="tddBuilder"
+         name="Tdd Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            callOnEmptyDelta="false"
+            hasNature="true"
+            isConfigurable="true">
+         <run
+               class="at.ac.tuwien.ifs.qse.tdd.builder.TddBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="TddNature"
+         name="Tdd Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="at.ac.tuwien.ifs.qse.tdd.builder.TddNature">
+         </run>
+      </runtime>
+      <builder
+            id="at.ac.tuwien.ifs.qse.tdd.tddBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="at.ac.tuwien.ifs.qse.tdd.preferences.TddPreferencePage"
+            id="at.ac.tuwien.ifs.qse.tdd.preferences.TddPreferencePage"
+            name="Tdd">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="at.ac.tuwien.ifs.qse.tdd.commands.category"
+            id="at.ac.tuwien.ifs.qse.tdd.commands.tddPluginEnableCommand"
+            name="Enable/Disable Tdd Plugin">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            categoryId="at.ac.tuwien.ifs.qse.tdd.commands.category"
+            id="at.ac.tuwien.ifs.qse.tdd.commands.jumpToTest"
+            name="Jump to Test">
+      </command>
+      <command
+            categoryId="at.ac.tuwien.ifs.qse.tdd.commands.category"
+            id="at.ac.tuwien.ifs.qse.tdd.commands.createTestClass"
+            name="Create Test/Class">
+      </command>
+      <category
+            id="at.ac.tuwien.ifs.qse.tdd.commands.category"
+            name="Tdd Command Category">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="at.ac.tuwien.ifs.qse.tdd.handlers.TddPluginHandler"
+            commandId="at.ac.tuwien.ifs.qse.tdd.commands.tddPluginEnableCommand">
+      </handler>
+      <handler
+            class="at.ac.tuwien.ifs.qse.tdd.handlers.JumpToTest"
+            commandId="at.ac.tuwien.ifs.qse.tdd.commands.jumpToTest">
+      </handler>
+      <handler
+            class="at.ac.tuwien.ifs.qse.tdd.handlers.CreateTestClass"
+            commandId="at.ac.tuwien.ifs.qse.tdd.commands.createTestClass">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?before=additions">
+         <menu
+               icon="icons/Tdd.ico"
+               label="Tdd">
+            <command
+                  commandId="at.ac.tuwien.ifs.qse.tdd.commands.tddPluginEnableCommand"
+                  label="Enable/Disable Tdd Plugin"
+                  mnemonic="E"
+                  style="toggle">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate>
+                     <or>
+                        <adapt
+                              type="org.eclipse.core.resources.IProject">
+                        </adapt>
+                        <adapt
+                              type="org.eclipse.jdt.core.ICompilationUnit">
+                        </adapt>
+                     </or>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="at.ac.tuwien.ifs.qse.tdd.commands.jumpToTest"
+                  label="Jump to Test/Class"
+                  mnemonic="J">
+               <visibleWhen
+                     checkEnabled="false">
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.jdt.core.ICompilationUnit">
+                     </adapt>
+                  </iterate>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="at.ac.tuwien.ifs.qse.tdd.commands.createTestClass"
+                  label="Create Test/Class"
+                  mnemonic="C">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:#CompilationUnitEditorContext?before=additions">
+         <menu
+               icon="icons/Tdd.ico"
+               label="Tdd">
+            <command
+                  commandId="at.ac.tuwien.ifs.qse.tdd.commands.tddPluginEnableCommand"
+                  label="Enable/Disable Tdd Plugin"
+                  mnemonic="E"
+                  style="toggle">
+            </command>
+            <command
+                  commandId="at.ac.tuwien.ifs.qse.tdd.commands.jumpToTest"
+                  label="Jump to Test/Class"
+                  mnemonic="J">
+            </command>
+            <command
+                  commandId="at.ac.tuwien.ifs.qse.tdd.commands.createTestClass"
+                  label="Create Test/Class"
+                  mnemonic="C">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+
+</plugin>

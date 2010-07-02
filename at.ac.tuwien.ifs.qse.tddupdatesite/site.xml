@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/at.ac.tuwien.ifs.qse.tddfeature_1.0.0.jar" id="at.ac.tuwien.ifs.qse.tddfeature" version="1.0.0"/>
+   <category-def name="at.ac.tuwien.ifs.qse.tddupdatesite.category" label="Tdd-Eclipse-Plugin">
+      <description>
+         An Eclipse-Plugin which supports the Test-driven development technique
+      </description>
+   </category-def>
+</site>
