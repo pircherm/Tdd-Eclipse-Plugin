@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="at.ac.tuwien.ifs.qse.tddfeature"
-      label="Tdd-Feature"
+      label="Tdd-Eclipse-Plugin"
       version="1.0.0"
       provider-name="Quality Software Engineering - qse.ifs.tuwien.ac.at">
 
