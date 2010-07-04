@@ -5,11 +5,12 @@
 technique
    </description>
    <feature url="features/at.ac.tuwien.ifs.qse.tddfeature_1.0.0.jar" id="at.ac.tuwien.ifs.qse.tddfeature" version="1.0.0">
-      <category name="at.ac.tuwien.ifs.qse.tddupdatesite.category"/>
+      <category name="Tdd-Eclipse-Plugin"/>
    </feature>
-   <category-def name="at.ac.tuwien.ifs.qse.tddupdatesite.category" label="Tdd-Eclipse-Plugin">
+   <category-def name="Tdd-Eclipse-Plugin" label="Tdd-Eclipse-Plugin">
       <description>
-         An Eclipse-Plugin which supports the Test-driven development technique
+         An Eclipse-Plugin which supports the Test-driven development
+technique.
       </description>
    </category-def>
 </site>
