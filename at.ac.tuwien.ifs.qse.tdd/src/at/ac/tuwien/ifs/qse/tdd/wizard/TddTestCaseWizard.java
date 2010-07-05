@@ -35,6 +35,7 @@ public class TddTestCaseWizard extends Wizard implements INewWizard {
 		page.setTypeName(fileName, true);
 		page.setClassUnderTest("");
 		addPage(page);
+		addPage(page2);
 	}
 
 	

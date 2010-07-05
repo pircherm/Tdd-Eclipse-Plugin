@@ -37,9 +37,8 @@ public abstract class TddFileHandler extends AbstractHandler implements IElement
 	private ISelectionService service = null;
 	private UIElement element;
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void updateElement(UIElement element, Map parameters) {
+	public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
 		service  = (ISelectionService)element.getServiceLocator().getService(ISelectionService.class);	
 		this.element = element;
 	}
@@ -64,7 +63,6 @@ public abstract class TddFileHandler extends AbstractHandler implements IElement
 	 * Extract the compilation unit from the current selection
 	 * @return ICompilationUnit
 	 */
-	@SuppressWarnings("unchecked")
 	public ICompilationUnit getCompilationUnit(){
 		
 		
@@ -77,7 +75,8 @@ public abstract class TddFileHandler extends AbstractHandler implements IElement
 		if(service != null) {
 			ISelection selection = service.getSelection();
 			if (selection instanceof TreeSelection) {
-				for (Iterator it = ((TreeSelection) selection).iterator(); it.hasNext();) {
+				for (@SuppressWarnings("rawtypes")
+				Iterator it = ((TreeSelection) selection).iterator(); it.hasNext();) {
 					Object el = it.next();
 					if (el instanceof ICompilationUnit) {
 						unit = (ICompilationUnit) el;

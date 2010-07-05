@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import at.ac.tuwien.ifs.qse.tdd.Activator;
+import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder;
 import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder.FILETYPE;
 import at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceConstants;
 import at.ac.tuwien.ifs.qse.tdd.wizard.TddTestCaseWizard;
@@ -120,7 +121,8 @@ public class TddErrorDialog extends Dialog {
 			action.setConfiguredWizardPage(page);
 			action.run();	
 		} else {
-			TddTestCaseWizard wizard = new TddTestCaseWizard(fileName);
+			TestFinder finder = new TestFinder();
+			TddTestCaseWizard wizard = new TddTestCaseWizard(finder.buildTestClassName(fileName));
 			WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 			dialog.open();
 		}

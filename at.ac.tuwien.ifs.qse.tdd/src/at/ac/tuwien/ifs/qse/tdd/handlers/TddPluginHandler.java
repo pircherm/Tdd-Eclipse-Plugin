@@ -37,14 +37,14 @@ public class TddPluginHandler extends TddFileHandler{
 	/**
 	 * Get the selected project and set/remove the Tdd nature.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
 		/*Package explorer selection */
 		ISelection selection = getService().getSelection();
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
+			for (@SuppressWarnings("rawtypes")
+			Iterator it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object el = it.next();
 				IProject project = null;
@@ -85,14 +85,14 @@ public class TddPluginHandler extends TddFileHandler{
 	/**
 	 * Set the toogle mode of the command
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public void updateElement(UIElement element, Map parameters) {
+	public void updateElement(UIElement element, @SuppressWarnings("rawtypes") Map parameters) {
 		
 		super.updateElement(element, parameters);
 		ISelection selection = getService().getSelection();
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
+			for (@SuppressWarnings("rawtypes")
+			Iterator it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object el = it.next();
 				IProject project = null;

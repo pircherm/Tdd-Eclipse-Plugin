@@ -40,8 +40,7 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int,
 	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	@SuppressWarnings("unchecked")
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)throws CoreException {
+	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)throws CoreException {
 		
 		String executeOn = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_EXECUTEON);
 		if(executeOn == null)
