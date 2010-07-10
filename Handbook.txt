@@ -1,0 +1,161 @@
+﻿Handbook of the Tdd-Eclipse-Plugin
+
+Introduction:
+
+The Test driven Development (TDD) is based on the idea to implement tests before
+the feature. This Plug-in supports the developer to learn and use the process of TDD. 
+
+
+Description:
+
+The Tdd-Eclipse-Plugin supports the developer to learn and use the TDD principles.
+It shows for every change of the code how much is covered by tests. If there is no
+test currently available for the changed class the plug-in informs you and gives 
+you also the possibility to create the test. 
+
+
+System-Requirements:
+
+	- Eclipse IDE (Eclipse Galileo SR2 3.5.2 or higher, www.eclipse.org)
+	- JUnit Eclipse Plug-in
+	- EclEmma (www.eclemma.org)
+	- Tdd-Eclipse-Plugin (http://github.com/pircherm/Tdd-Eclipse-Plugin)
+
+
+Install:
+
+Download the listed system-requirements. Unpack the Eclipse IDE and install the 
+EclEmma-Plugin as described on the project home page of EclEmma. After the 
+sucessfull install download the source code of the Tdd-Eclipse-Plugin from 
+GitHup or checkout the project. Start the Eclipse IDE and add the directory 
+“at.ac.tuwien.ifs.qse.tddupdatesite” as Update site and install the Plug-in.
+The Plug-in can’t be installed if the EclEmma is not already installed.
+
+
+Features:
+
+	- Automated execution of the associated JUnit-Tests and calculation of the code coverage
+	- Automated search of test/class files within the selected project or workspace
+	- Freely definable prefix and suffix of the test-classes
+	- Integrated create class/junit test class wizard
+	- Jump to test/class command
+
+
+
+Developer information:
+
+The following parts of the document contains information which helps to understand the design 
+of the Tdd-Eclipse-plugin.
+
+Requirements
+
+	- Eclipse IDE (Eclipse Galileo SR2 3.5.2 or higher, www.eclipse.org)
+	- JUnit Eclipse Plugin 
+	- EclEmma (www.eclemma.org)
+
+Preperation of the source code:
+Check out the source code of the Eclipse Plug-in on http://github.com/pircherm/Tdd-Eclipse-Plugin
+and import the 3 Plug-ins as "Existing Projects into Workspace" to the Eclipse workspace.
+
+The Tdd-Eclipse-Plugin project consists of the following three plug-ins:
+	
+	1) at.ac.tuwien.ifs.qse.tdd
+	2) at.ac.tuwien.ifs.qse.tddfeature
+	3) at.ac.tuwien.ifs.qse.tddupdatesite
+
+The first plug-in is the main plug-in. It contains all of the features. The other plug-ins 
+are only needed to create the update site.
+
+ 
+The main plug-in "at.ac.tuwien.ifs.qse.tdd":
+
+This plug-in is a classical Eclipse plug-in with UI contribution. It implements different
+extensions e.g. nature, builder, commands etc.
+
+Plug-in packages:
+
+	at.ac.tuwien.ifs.qse.tdd
+		This is the base package of the plug-in. It contains only the activator which has no further
+		improtance.
+
+	at.ac.tuwien.ifs.qse.tdd.builder
+		Here you can find the builder and the nature. The Builder is one of the central extensions
+		of the plug-in.The builder will always be called when the developer activate the build 
+		process of the project. This can be for example the Save-Action. 
+		The builder gets the information about which files have changed and he can react adequate.
+		The Nature in this package is the connector between the project and the plug-in.
+
+	at.ac.tuwien.ifs.qse.tdd.dialog
+		This package contains the plug-in dialogs like the warning dialog.
+
+	at.ac.tuwien.ifs.qse.tdd.exception
+		All the plug-in specific exception can be found here.
+
+	at.ac.tuwien.ifs.qse.tdd.finder
+		This package contains the core feature of the plug-in. Here can you find all the classes 
+		which implements the test/class search functions of the plug-in.
+
+	at.ac.tuwien.ifs.qse.tdd.handlers
+		All the needed handlers are located in this package.
+
+	at.ac.tuwien.ifs.qse.tdd.preferences
+		The preference related classes are located here.
+
+	at.ac.tuwien.ifs.qse.tdd.wizard
+		This package contains all the wizard related classes.
+
+Important classes:
+
+TddBuilder
+	The TddBuilder managed the call of the coverage. With every e.g. Save Action 
+	the function "build" of the Builder class will be called. The function forwards
+	the call to the "fullBuild" or "incrementalBuild" function.
+
+	Functions: 
+		- incrementalBuild
+		  Only the files which are changed will be included in the coverage call. 
+		  The first step of the function is to search for the Test class. If there can't be 
+		  found a related test a "SearchException" will be thrown and the whole coverage process
+		  will be aborted. If all needed files could be found the coverage process will be called.
+		- fullBuild
+		  This function does the same as the function "incrementalBuild" with the difference that
+		  the coverage process does include all files in the project not only the changed. 
+
+CoverageBuilderVisitor/ CoverageFullBuilderVisitor
+	The visitor saves all visited class which should be handled by the incrementalBuild/fullBuild
+	
+CoverageExecuter
+	This class is the point where the Tdd-Eclipse-Plugin accesses the API of the EclEmma Plug-in.
+	
+	Functions:
+	- executeFileCoverage
+		With the handover of an IType which should be covered the Tdd-Eclipse-Plugin launches 
+		the EclEmma coverage process.
+	- executeEditorCoverage
+		The function extracts the currently selected Editor and executes the coverage process 
+		for the underlining IType.
+
+TestFinder
+	This class implements different methods which help to find a class file in the 
+	project/workspace and to create the needed Test/Class names. Additional it helps
+	also to check which type a selected class has.
+	
+CreateTestClass
+	This class implements the call of the CreateClassWizard or the CreateTestWizard. 
+	It checks first which type the selected file has and then calls the right wizard.
+
+JumpToTest
+	This handler searchs the needed test/class and opens it. If there could
+	not be found any test a warning dialog will be showing up.
+
+TddPluginHandler
+	This Handler enables or disables the builder for the selected project.
+
+TddFileHandler
+	This abstract class is the base of the other handlers and implements the logic
+	to check if the selected IType is part of a project wheere the Tdd-Eclipse-Plugin
+	is active.
+
+Where can you find background information:
+	- Eclipse documentation: http://help.eclipse.org/galileo/index.jsp
+	- EclEmma documentation: http://www.eclemma.org/devdoc/index.html
