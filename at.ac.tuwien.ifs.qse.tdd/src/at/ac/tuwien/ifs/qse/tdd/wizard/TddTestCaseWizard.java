@@ -30,14 +30,11 @@ public class TddTestCaseWizard extends Wizard implements INewWizard {
 	
 	public void addPages() {
 		page2 = new NewTestCaseWizardPageTwo();
-		page = new NewTestCaseWizardPageOne(page2);
+		page = new TddNewTestCaseWizardPageOne(page2,fileName);
 		page.init(selection);
-		page.setTypeName(fileName, true);
-		page.setClassUnderTest("");
 		addPage(page);
 		addPage(page2);
 	}
-
 	
 	public boolean performFinish() {
 		try {

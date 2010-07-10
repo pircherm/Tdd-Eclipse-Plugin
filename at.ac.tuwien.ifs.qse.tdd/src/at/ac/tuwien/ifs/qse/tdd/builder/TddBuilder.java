@@ -1,6 +1,8 @@
 package at.ac.tuwien.ifs.qse.tdd.builder;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -20,6 +22,7 @@ import at.ac.tuwien.ifs.qse.tdd.exception.NoTestFound;
 import at.ac.tuwien.ifs.qse.tdd.exception.SearchException;
 import at.ac.tuwien.ifs.qse.tdd.finder.CoverageBuilderVisitor;
 import at.ac.tuwien.ifs.qse.tdd.finder.CoverageExecuter;
+import at.ac.tuwien.ifs.qse.tdd.finder.CoverageFullBuilderVisitor;
 import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder;
 import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder.FILETYPE;
 import at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceConstants;
@@ -46,10 +49,9 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 		if(executeOn == null)
 			return null;
 
-
 		if (kind == FULL_BUILD) {
 			if(executeOn.equals(PreferenceConstants.P_EXECUTEON_ALL) ||executeOn.equals(PreferenceConstants.P_EXECUTEON_BUILD)){
-
+				fullBuild(getProject(), monitor);
 			}
 		} else {
 			if(executeOn.equals(PreferenceConstants.P_EXECUTEON_ALL) ||executeOn.equals(PreferenceConstants.P_EXECUTEON_INC)){
@@ -64,6 +66,58 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 		return null;
 	}
 
+	
+	/**
+	 * Start point of the Tdd Plugin
+	 * 	
+	 * </p>
+	 * <ul>
+	 * <li>Find the TestClass</li>
+	 * <li>Execute the coverage analyse</li>
+	 * </ul> 
+	 * @param project contains the changed Resources
+	 * @param monitor
+	 * @throws CoreException
+	 */
+	protected void fullBuild(IProject project,IProgressMonitor monitor) throws CoreException {
+		
+		CoverageFullBuilderVisitor coverageVisitor = new CoverageFullBuilderVisitor();
+	    project.accept(coverageVisitor);
+
+	    if (coverageVisitor.getFileList().size() == 0) {
+	      return;
+	    }
+	   	    
+	    TestFinder finder = new TestFinder();
+	    CoverageExecuter executer = new CoverageExecuter();
+	    
+	    List<IType> types = new ArrayList<IType>();
+	    for (IFile file : coverageVisitor.getFileList()) {
+	    	String fileName= null;
+	 	    try {
+	 	    	fileName = file.getName();
+	 	    	
+	 	    	if(finder.getTypeOfSearchName(fileName).equals(FILETYPE.TESTCLASS)){
+	 	    		continue;
+	 	    	}
+	 	    	
+	 	    	//Get TestName
+	 	    	String testName = finder.buildTestClassName(file.getName());
+	 			//Search the associated TestFile
+	 	    	IType type = finder.search(testName, project);
+	 	    	if(type != null) {
+	 	    		types.add(type);
+	 	    	}
+	 	    	
+	 	    } catch (SearchException e) {
+	 			handleException(e,fileName);
+	 			return;
+	 		}  
+		}
+	    //execute the coverage
+ 	    if(types.size() != 0)	
+ 	    	executer.executeFileCoverage(types); 	   
+	}
 		
 	/**
 	 * Start point of the Tdd Plugin
@@ -79,39 +133,41 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	 */
 	protected void incrementalBuild(IResourceDelta delta,IProgressMonitor monitor) throws CoreException {
 		
-		
 		CoverageBuilderVisitor coverageVisitor = new CoverageBuilderVisitor();
 	    delta.accept(coverageVisitor);
-	    
 
-	    if (coverageVisitor.getFileList().size() != 1) {
+	    if (coverageVisitor.getFileList().size() == 0) {
 	      return;
 	    }
 	   	    
 	    TestFinder finder = new TestFinder();
 	    CoverageExecuter executer = new CoverageExecuter();
 	    
-
-	    IFile file = (IFile) coverageVisitor.getFileList().get(0);
-
-	    String fileName= null;
-	    try {
-	    	fileName = file.getName();
-	    	
-	    	if(finder.getTypeOfSearchName(fileName).equals(FILETYPE.TESTCLASS)){
-	    		return;
-	    	}
-	    	
-	    	//Get TestName
-	    	String testName = finder.buildTestClassName(file.getName());
-			//Search the associated TestFile
-	    	IType type = finder.search(testName, delta.getResource().getProject());
-	    	
-	    	//execute the coverage
-	    	executer.executeFileCoverage(type);
-	    } catch (SearchException e) {
-			handleException(e,fileName);
-		}  
+	    List<IType> types = new ArrayList<IType>();
+	    for (IFile file : coverageVisitor.getFileList()) {
+	    	 String fileName= null;
+	 	    try {
+	 	    	fileName = file.getName();
+	 	    	
+	 	    	if(finder.getTypeOfSearchName(fileName).equals(FILETYPE.TESTCLASS)){
+	 	    		continue;
+	 	    	}
+	 	    	
+	 	    	//Get TestName
+	 	    	String testName = finder.buildTestClassName(file.getName());
+	 			//Search the associated TestFile
+	 	    	IType type = finder.search(testName, delta.getResource().getProject());
+	 	    	if(type != null) {
+	 	    		types.add(type);
+	 	    	}
+	 	    		 	    	
+	 	    } catch (SearchException e) {
+	 			handleException(e,fileName);
+	 		}  
+		}
+	    //execute the coverage
+	    if(types.size() != 0)	
+ 	    	executer.executeFileCoverage(types); 	   
 
 	}
 	

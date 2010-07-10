@@ -132,7 +132,7 @@ public class TestFinder {
 		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
 		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
 								
-		String name = searchName.replace(".java", "");
+		String name = getClassName(searchName);
 		
 		return prefix + name + suffix;
 	}
@@ -148,7 +148,7 @@ public class TestFinder {
 		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
 		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
 								
-		String name = searchName.replace(".java", "");
+		String name = getClassName(searchName);
 		
 		if(prefix.length() != 0) {
 			name = name.substring(prefix.length(), name.length());
@@ -160,5 +160,10 @@ public class TestFinder {
 		
 		return name;
 	}
+	
+	public String getClassName(String searchName) {
+		return searchName.replace(".java", "");
+	}
+	
 	
 }

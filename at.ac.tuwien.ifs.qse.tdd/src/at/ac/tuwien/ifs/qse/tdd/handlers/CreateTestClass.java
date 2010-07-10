@@ -31,7 +31,7 @@ public class CreateTestClass extends TddFileHandler {
 		TestFinder finder = new TestFinder();
 		
 		if(finder.getTypeOfSearchName(unit.getElementName()).equals(TestFinder.FILETYPE.CLASS)) {
-			createTestClass(finder.buildTestClassName(unit.getElementName()));
+			createTestClass(finder.buildTestClassName(unit.getElementName()),finder.getClassName(unit.getElementName()));
 		} else {
 			createClass(finder.buildClassName(unit.getElementName()));
 		}
@@ -40,7 +40,7 @@ public class CreateTestClass extends TddFileHandler {
 	}
 
 	
-	private void createTestClass(String fileName){
+	private void createTestClass(String fileName,String baseName){
 		TddTestCaseWizard wizard = new TddTestCaseWizard(fileName);
 		if (getService().getSelection() instanceof IStructuredSelection) {
 			IStructuredSelection sel = (IStructuredSelection) getService().getSelection();

@@ -1,5 +1,8 @@
 package at.ac.tuwien.ifs.qse.tdd.finder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
@@ -10,7 +13,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-
 import com.mountainminds.eclemma.ui.launching.CoverageLaunchShortcut;
 
 /**
@@ -20,70 +22,104 @@ public class CoverageExecuter {
 
 	public static final String SHORT_CUT = "org.eclipse.jdt.junit.junitShortcut";
 	public static final String LAUNCH_MODE = "coverage";
-	
+
+	/**
+	 * Starts coverage for the IType.
+	 * @param lwType should include a class file which is a Junit test.
+	 */
+	public void executeFileCoverage(final List<IType> types) {
+
+		if(types == null || types.size() == 0) {
+			return;
+		}
+		Display.getDefault().asyncExec(new Runnable() {
+
+			public void run() {
+				try {
+					CoverageLaunchShortcut launchShortcut = new CoverageLaunchShortcut();
+					//Define which shortcut should be used
+					launchShortcut.setInitializationData(null, null,SHORT_CUT); //$NON-NLS-1$
+									
+					for (IType type : types) {
+						ICompilationUnit lwCompilationUnit = type.getCompilationUnit();
+						if(lwCompilationUnit != null)
+							//Launch the coverage
+							launchShortcut.launch(new StructuredSelection(lwCompilationUnit), LAUNCH_MODE); //$NON-NLS-1$
+					}
+				
+				} catch (CoreException ex) {
+
+				} 
+			}
+		}); 
+
+	}
+
+
+
 	/**
 	 * Starts coverage for the IType.
 	 * @param lwType should include a class file which is a Junit test.
 	 */
 	public void executeFileCoverage(final IType type) {
-	    
+
 		Display.getDefault().asyncExec(new Runnable() {
-	      
-	      public void run() {
-	       	try {
-	          ICompilationUnit lwCompilationUnit = type.getCompilationUnit();
 
-	          CoverageLaunchShortcut launchShortcut = new CoverageLaunchShortcut();
-	          //Define which shortcut should be used
-	          launchShortcut.setInitializationData(null, null,SHORT_CUT); //$NON-NLS-1$
-	          
-	          ISelection selection = new StructuredSelection(lwCompilationUnit);
-	          
-	          //Launch the coverage
-	          launchShortcut.launch(selection, LAUNCH_MODE); //$NON-NLS-1$
-	        } catch (CoreException ex) {
-	        	
-	        } 
-	      }
-	    }); 
+			public void run() {
+				try {
+					ICompilationUnit lwCompilationUnit = type.getCompilationUnit();
 
-	  }
-	 
+					CoverageLaunchShortcut launchShortcut = new CoverageLaunchShortcut();
+					//Define which shortcut should be used
+					launchShortcut.setInitializationData(null, null,SHORT_CUT); //$NON-NLS-1$
+
+					ISelection selection = new StructuredSelection(lwCompilationUnit);
+
+					//Launch the coverage
+					launchShortcut.launch(selection, LAUNCH_MODE); //$NON-NLS-1$
+				} catch (CoreException ex) {
+
+				} 
+			}
+		}); 
+
+	}
+
 	/**
 	 * Start the coverage for the currently selected Editor
 	 */
 	public void executeEditorCoverage() {
-		   
 
-		    Display.getDefault().asyncExec(new Runnable() {
-		      /*
-		       * (non-Javadoc)
-		       * 
-		       * @see java.lang.Runnable#run()
-		       */
-		      public void run() {
-		        IWorkbenchWindow iWorkbenchWindow = PlatformUI.getWorkbench()
-		            .getActiveWorkbenchWindow();
-		        if (iWorkbenchWindow == null) {
-		          return;
-		        }
-		        IWorkbenchPage iworkbenchpage = iWorkbenchWindow.getActivePage();
-		        if (iworkbenchpage == null) {
-		          return;
-		        }
-		        IEditorPart iEditorpart = iworkbenchpage.getActiveEditor();
 
-		        CoverageLaunchShortcut launchShortcut = new CoverageLaunchShortcut();
-		        try {
-		          launchShortcut.setInitializationData(null, null, "org.eclipse.jdt.junit.junitShortcut"); //$NON-NLS-1$
-		        } catch (CoreException e) {
-		          
-		        }
-		        launchShortcut.launch(iEditorpart, "coverage");
-		       
-		      }
-		    });
-		    
-		  }
-	
+		Display.getDefault().asyncExec(new Runnable() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.lang.Runnable#run()
+			 */
+			public void run() {
+				IWorkbenchWindow iWorkbenchWindow = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow();
+				if (iWorkbenchWindow == null) {
+					return;
+				}
+				IWorkbenchPage iworkbenchpage = iWorkbenchWindow.getActivePage();
+				if (iworkbenchpage == null) {
+					return;
+				}
+				IEditorPart iEditorpart = iworkbenchpage.getActiveEditor();
+
+				CoverageLaunchShortcut launchShortcut = new CoverageLaunchShortcut();
+				try {
+					launchShortcut.setInitializationData(null, null, "org.eclipse.jdt.junit.junitShortcut"); //$NON-NLS-1$
+				} catch (CoreException e) {
+
+				}
+				launchShortcut.launch(iEditorpart, "coverage");
+
+			}
+		});
+
+	}
+
 }
