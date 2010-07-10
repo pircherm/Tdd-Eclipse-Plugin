@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tdd
 Bundle-SymbolicName: at.ac.tuwien.ifs.qse.tdd;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: at.ac.tuwien.ifs.qse.tdd.Activator
 Bundle-Vendor: Quality Software Engineering - qse.ifs.tuwien.ac.at
 Require-Bundle: org.eclipse.ui,

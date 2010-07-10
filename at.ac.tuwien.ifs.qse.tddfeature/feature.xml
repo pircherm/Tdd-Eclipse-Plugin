@@ -2,7 +2,7 @@
 <feature
       id="at.ac.tuwien.ifs.qse.tddfeature"
       label="Tdd-Eclipse-Plugin"
-      version="1.0.0"
+      version="1.0.1"
       provider-name="Quality Software Engineering - qse.ifs.tuwien.ac.at">
 
    <description url="http://github.com/pircherm/Tdd-Eclipse-Plugin">
@@ -238,7 +238,7 @@ litigation.
          id="at.ac.tuwien.ifs.qse.tdd"
          download-size="0"
          install-size="0"
-         version="1.0.0"
+         version="1.0.1"
          unpack="false"/>
 
 </feature>
