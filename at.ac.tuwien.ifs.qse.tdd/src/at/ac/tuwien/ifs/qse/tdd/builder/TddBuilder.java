@@ -25,6 +25,7 @@ import at.ac.tuwien.ifs.qse.tdd.finder.CoverageExecuter;
 import at.ac.tuwien.ifs.qse.tdd.finder.CoverageFullBuilderVisitor;
 import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder;
 import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder.FILETYPE;
+import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder.SEARCHSCOPE;
 import at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceConstants;
 
 
@@ -35,8 +36,7 @@ import at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceConstants;
 public class TddBuilder extends IncrementalProjectBuilder implements IHandleException{
 
 	public static final String BUILDER_ID = "at.ac.tuwien.ifs.qse.tdd.tddBuilder";
-	
-		
+			
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,7 +44,7 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)throws CoreException {
-		
+		 
 		String executeOn = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_EXECUTEON);
 		if(executeOn == null)
 			return null;
@@ -87,8 +87,11 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	    if (coverageVisitor.getFileList().size() == 0) {
 	      return;
 	    }
-	   	    
-	    TestFinder finder = new TestFinder();
+	    //Load the preferences
+		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
+		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+	    
+		TestFinder finder = new TestFinder(prefix,suffix);
 	    CoverageExecuter executer = new CoverageExecuter();
 	    
 	    List<IType> types = new ArrayList<IType>();
@@ -97,14 +100,19 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	 	    try {
 	 	    	fileName = file.getName();
 	 	    	
+	 			
 	 	    	if(finder.getTypeOfSearchName(fileName).equals(FILETYPE.TESTCLASS)){
 	 	    		continue;
 	 	    	}
 	 	    	
 	 	    	//Get TestName
 	 	    	String testName = finder.buildTestClassName(file.getName());
-	 			//Search the associated TestFile
-	 	    	IType type = finder.search(testName, project);
+	 			
+	 	    	//Get Search Scope
+	 	    	String scope = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SCOPE);
+	 	    	
+	 	    	//Search the associated TestFile
+	 	    	IType type = finder.search(testName, project,SEARCHSCOPE.valueOf(scope));
 	 	    	if(type != null) {
 	 	    		types.add(type);
 	 	    	}
@@ -140,7 +148,11 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	      return;
 	    }
 	   	    
-	    TestFinder finder = new TestFinder();
+	    //Load the preferences
+		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
+		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+	    
+		TestFinder finder = new TestFinder(prefix,suffix);
 	    CoverageExecuter executer = new CoverageExecuter();
 	    
 	    List<IType> types = new ArrayList<IType>();
@@ -149,14 +161,19 @@ public class TddBuilder extends IncrementalProjectBuilder implements IHandleExce
 	 	    try {
 	 	    	fileName = file.getName();
 	 	    	
+	 	  
+	 	    	
 	 	    	if(finder.getTypeOfSearchName(fileName).equals(FILETYPE.TESTCLASS)){
 	 	    		continue;
 	 	    	}
 	 	    	
 	 	    	//Get TestName
 	 	    	String testName = finder.buildTestClassName(file.getName());
-	 			//Search the associated TestFile
-	 	    	IType type = finder.search(testName, delta.getResource().getProject());
+	 	    	//Get Scope
+	 	    	String scope = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SCOPE);
+	 	    	
+	 	    	//Search the associated TestFile
+	 	    	IType type = finder.search(testName, delta.getResource().getProject(),SEARCHSCOPE.valueOf(scope));
 	 	    	if(type != null) {
 	 	    		types.add(type);
 	 	    	}

@@ -7,9 +7,6 @@ public class PreferenceConstants {
 
 	//Scope
 	public static final String P_SCOPE = "TddScopePreference";
-	public static final String P_SCOPE_PROJECT = "project";
-	public static final String P_SCOPE_WORKSPACE = "workspace";
-	public static final String P_SCOPE_DIRECTORY = "directory";
 	
 	//Test name conventions
 	public static final String P_PREFIX = "TddPrefixPreference";

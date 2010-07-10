@@ -121,7 +121,11 @@ public class TddErrorDialog extends Dialog {
 			action.setConfiguredWizardPage(page);
 			action.run();	
 		} else {
-			TestFinder finder = new TestFinder();
+			 //Load the preferences
+			String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
+			String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+		    
+			TestFinder finder = new TestFinder(prefix,suffix);
 			TddTestCaseWizard wizard = new TddTestCaseWizard(finder.buildTestClassName(fileName));
 			WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
 			dialog.open();

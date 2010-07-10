@@ -16,6 +16,7 @@ import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 
 
 import at.ac.tuwien.ifs.qse.tdd.Activator;
+import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder.SEARCHSCOPE;
 
 
 public class TddPreferencePage	extends FieldEditorPreferencePage 	implements IWorkbenchPreferencePage {
@@ -33,8 +34,8 @@ public class TddPreferencePage	extends FieldEditorPreferencePage 	implements IWo
 	public void createFieldEditors() {
 		//Scope		
 		addField(new ComboFieldEditor(PreferenceConstants.P_SCOPE, "&Search scope", 
-				new String[][] { { "Project", PreferenceConstants.P_SCOPE_PROJECT }, 
-				{"Workspace", PreferenceConstants.P_SCOPE_WORKSPACE }/*, {"Directory", PreferenceConstants.P_SCOPE_DIRECTORY}*/}
+				new String[][] { { "Project", SEARCHSCOPE.PROJECT.toString()}, 
+				{"Workspace", SEARCHSCOPE.WORKSPACE.toString() }/*, {"Directory", PreferenceConstants.P_SCOPE_DIRECTORY}*/}
 				,getFieldEditorParent()));
 		
 		//TestName conventions

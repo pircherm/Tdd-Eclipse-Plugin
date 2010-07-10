@@ -16,13 +16,11 @@ import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 
-import at.ac.tuwien.ifs.qse.tdd.Activator;
 import at.ac.tuwien.ifs.qse.tdd.exception.IllegalProjectType;
 import at.ac.tuwien.ifs.qse.tdd.exception.MoreThanOneTestFound;
-import at.ac.tuwien.ifs.qse.tdd.exception.NoSettingsFound;
 import at.ac.tuwien.ifs.qse.tdd.exception.NoTestFound;
+import at.ac.tuwien.ifs.qse.tdd.exception.ScopeNull;
 import at.ac.tuwien.ifs.qse.tdd.exception.SearchException;
-import at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceConstants;
 
 
 /**
@@ -34,15 +32,29 @@ public class TestFinder {
 	public enum FILETYPE{
 		TESTCLASS,CLASS;
 	}
+	
+	public enum SEARCHSCOPE{
+		PROJECT,WORKSPACE,DIRECTORY
+	}
+	
+	private String prefix = "";
+	private String suffix = "";
+	
+		
+	public TestFinder(String prefix, String suffix) {
+		super();
+		this.prefix = prefix;
+		this.suffix = suffix;
+	}
+
+
 	/**
 	 * Identify the type of the searchName with the suffix and prefix values
 	 * @param name
 	 * @return
 	 */
 	public FILETYPE getTypeOfSearchName(String searchName){
-		//Load the preferences
-		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
-		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+		
 								
 		String name = searchName.replace(".java", "");
 		
@@ -62,7 +74,7 @@ public class TestFinder {
 	 * @return the found ClassFile
 	 * @throws SearchException 
 	 */
-	public IType search(String className, final IProject project) throws SearchException {
+	public IType search(String className, IProject project,SEARCHSCOPE searchScope) throws SearchException,ScopeNull {
 
 		SearchPattern pattern = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS,
 				IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
@@ -73,13 +85,11 @@ public class TestFinder {
 		IProjectNature nature = null;
 		IJavaElement[] elements = null;
 		IJavaSearchScope scope = null;
-		
-		String scopePref = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SCOPE);
-		if(scopePref == null)
-			throw new NoSettingsFound("No settings found for the scope!");
-		
-		
-		if(scopePref.equals(PreferenceConstants.P_SCOPE_PROJECT)) {
+				
+		if(searchScope == null)
+			throw new ScopeNull("No settings found for the scope!");
+				
+		if(searchScope.equals(SEARCHSCOPE.PROJECT)) {
 			//Extract IJavaProject
 			try {
 				nature = project.getNature(JavaCore.NATURE_ID);
@@ -94,7 +104,7 @@ public class TestFinder {
 			//Define search Scope
 			elements = new IJavaElement[]{ jProject };
 			scope = SearchEngine.createJavaSearchScope(elements, true);
-		} else if(scopePref.equals(PreferenceConstants.P_SCOPE_WORKSPACE)){
+		} else if(searchScope.equals(SEARCHSCOPE.WORKSPACE)){
 			scope = SearchEngine.createWorkspaceScope();
 		} else {
 			throw new SearchException("No Scope set!");
@@ -128,9 +138,7 @@ public class TestFinder {
 	 * @return the name of the TestClassName
 	 */
 	public String buildTestClassName(String searchName) {
-		//Load the preferences
-		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
-		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+		
 								
 		String name = getClassName(searchName);
 		
@@ -144,9 +152,7 @@ public class TestFinder {
 	 * @return the name of the TestClassName
 	 */
 	public String buildClassName(String searchName){
-		//Load the preferences
-		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
-		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+		
 								
 		String name = getClassName(searchName);
 		
@@ -163,6 +169,26 @@ public class TestFinder {
 	
 	public String getClassName(String searchName) {
 		return searchName.replace(".java", "");
+	}
+
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
 	}
 	
 	

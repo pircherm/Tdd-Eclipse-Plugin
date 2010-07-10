@@ -9,8 +9,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 
+import at.ac.tuwien.ifs.qse.tdd.Activator;
 import at.ac.tuwien.ifs.qse.tdd.exception.SearchException;
 import at.ac.tuwien.ifs.qse.tdd.finder.TestFinder;
+import at.ac.tuwien.ifs.qse.tdd.preferences.PreferenceConstants;
 import at.ac.tuwien.ifs.qse.tdd.wizard.TddTestCaseWizard;
 
 
@@ -28,7 +30,12 @@ public class CreateTestClass extends TddFileHandler {
 		if(unit == null)
 			return null;
 		
-		TestFinder finder = new TestFinder();
+		 //Load the preferences
+		String prefix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_PREFIX);
+		String suffix = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.P_SUFFIX);
+	    
+		TestFinder finder = new TestFinder(prefix,suffix);
+		
 		
 		if(finder.getTypeOfSearchName(unit.getElementName()).equals(TestFinder.FILETYPE.CLASS)) {
 			createTestClass(finder.buildTestClassName(unit.getElementName()),finder.getClassName(unit.getElementName()));
